@@ -25,21 +25,30 @@ section, and the stock template does no harm there.
 
 ## Install
 
-Requires spec-kit 1.0 or later, in a directory that has already been through
-`specify init`.
+Requires spec-kit 1.0 or later. Pass the preset to `init` by local path, in the
+same command, so the constitution is seeded from this preset's template:
 
 ```bash
-specify preset add --dev /path/to/speckit-preset-science-study
-specify preset resolve spec-template          # confirm it resolves into the preset
+specify init --here --integration claude --preset /path/to/speckit-preset-science-study
+specify preset resolve spec-template          # should print a path under .specify/presets/science-study/
 ```
 
-`--dev` copies the directory rather than linking it, so after editing the source
-you need to reinstall:
+Do not `init` first and add the preset afterwards. `init` writes
+`.specify/memory/constitution.md` from the core template, and `preset add` does
+not replace it, even when the file is missing. Verified on 1.0.5: only the
+`--preset` flag on `init` seeds the constitution from an installed preset.
+
+The install copies the directory rather than linking it, so after editing the
+source you need to reinstall:
 
 ```bash
 specify preset remove science-study
 specify preset add --dev /path/to/speckit-preset-science-study
 ```
+
+With the Claude integration, commands install as skills under
+`.claude/skills/`, so the pipeline command is invoked as `/speckit-pipeline`
+with a hyphen, matching the core ones.
 
 ## The two ideas worth knowing
 
