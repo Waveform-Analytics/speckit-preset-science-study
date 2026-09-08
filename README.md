@@ -50,6 +50,22 @@ With the Claude integration, commands install as skills under
 `.claude/skills/`, so the pipeline command is invoked as `/speckit-pipeline`
 with a hyphen, matching the core ones.
 
+**After installing, check for a broken submodule link before your first
+commit.** `--dev` copies this directory including its own `.git`, so a plain
+`git add` in the consuming project records `.specify/presets/science-study` as
+a gitlink (mode `160000`) rather than committing the files. A clone then gets
+an empty preset directory, silently missing every override, with no error.
+Found 2026-09-08 in `pacific-indices`. Fix before committing:
+
+```bash
+rm -rf .specify/presets/science-study/.git
+git rm --cached -r .specify/presets/science-study 2>/dev/null   # only if already added
+git add .specify/presets/science-study
+```
+
+Confirm it worked with `git ls-tree HEAD .specify/presets/science-study/preset.yml`.
+The mode should read `100644`, not `160000`.
+
 ## The two ideas worth knowing
 
 **Status and outcome let the record survive non-linear work.** Spec-kit's model
